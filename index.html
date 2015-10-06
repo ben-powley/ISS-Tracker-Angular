@@ -58,12 +58,12 @@
                 .success(function(res) {
                     $scope.data = res
                 });
-            }, 1000);
+            }, 5000);
 
             setInterval(function() {
                 latLng = new google.maps.LatLng($scope.data.latitude, $scope.data.longitude);
                 map.panTo(latLng);
-            }, 20000);
+            }, 60000);
         });
 
         var map;
@@ -89,7 +89,7 @@
             });
             setInterval(function() {
                 marker.setPosition({lat: scope.data.latitude, lng: scope.data.longitude});
-            }, 1000);
+            }, 5000);
         }
 
     </script>
