@@ -20,23 +20,18 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                <h1 class="text-center">ISS Tracker</h1>
+                <h3 class="text-center">ISS Tracker</h3>
                 <div ng-controller="mainController" class="ng-cloak">
-                    <h4><strong>Latitude:</strong> <br><br> {{data.latitude}}</h4>
+                    <h5><strong>Latitude:</strong> <br><br> {{data.latitude}}</h5>
                     <hr>
-                    <h4><strong>Longitude:</strong> <br><br> {{data.longitude}}</h4>
+                    <h5><strong>Longitude:</strong> <br><br> {{data.longitude}}</h5>
                     <hr>
-                    <h4><strong>Altitude:</strong> <br><br> {{data.altitude}} km</h4>
+                    <h5><strong>Altitude:</strong> <br><br> {{data.altitude}} km</h5>
                     <hr>
-                    <h4><strong>Velocity:</strong> <br><br> {{data.velocity}} km/s</h4>
-                    <hr>
-                    <h4><strong>Solar Latitude:</strong> <br><br> {{data.solar_lat}}</h4>
-                    <hr>
-                    <h4><strong>Solar Longitude:</strong> <br><br> {{data.solar_lon}}</h4>
+                    <h5><strong>Velocity:</strong> <br><br> {{data.velocity}} km/s</h5>
                     <hr>
                 </div>
                 <div id="map"></div>
-                <br>
                 <br>
             </div>
         </div>
@@ -49,43 +44,63 @@
     </script>
     <script>
 
-    var app = angular.module('app', []);
-    
-    app.controller('mainController', function($scope, $http) {
-        $http.get("https://api.wheretheiss.at/v1/satellites/25544")
-            .success(function(res) {
-                $scope.data = res
-                initMap();
-            });
+        var app = angular.module('app', []);
+        var latLng;
+        
+        app.controller('mainController', function($scope, $http) {
+            $http.get("https://api.wheretheiss.at/v1/satellites/25544")
+                .success(function(res) {
+                    $scope.data = res
+                    initMap();
+                });
 
-        setInterval(function() { $http.get("https://api.wheretheiss.at/v1/satellites/25544")
-            .success(function(res) {
-                $scope.data = res
-            });
-        }, 1000);
+            setInterval(function() { $http.get("https://api.wheretheiss.at/v1/satellites/25544")
+                .success(function(res) {
+                    $scope.data = res
+                });
+            }, 1000);
 
-        setInterval(function() {
-            initMap();
-        }, 10000);
-    });
-
-    function initMap() {
-        var $element = $('div[ng-controller="mainController"]');
-        var scope = angular.element($element).scope();
-        var latLang = {lat: scope.data.latitude, lng: scope.data.longitude};
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-            center: latLang,
-            scrollwheel: false,
-            zoom: 2
+            setInterval(function() {
+                latLng = new google.maps.LatLng($scope.data.latitude, $scope.data.longitude);
+                map.panTo(latLng);
+            }, 10000);
         });
 
-        var marker = new google.maps.Marker({
-            position: latLang,
-            map: map,
-            title: 'ISS'
-        });
-    }
+        var map;
+        var marker;
+        var markersArray = [];
+
+        function initMap() {
+            var $element = $('div[ng-controller="mainController"]');
+            var scope = angular.element($element).scope();
+            latLang = {lat: scope.data.latitude, lng: scope.data.longitude};
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: latLang,
+                scrollwheel: false,
+                zoom: 2
+            });
+
+            var img = 'crosshair.png';
+            setInterval(function() {
+                marker = new google.maps.Marker({
+                    position: {lat: scope.data.latitude, lng: scope.data.longitude},
+                    map: map,
+                    title: 'ISS',
+                    icon: img
+                });
+                clearOverlays();
+                markersArray.push(marker);
+            }, 1000);
+        }
+
+        function clearOverlays() {
+            for (var i = 0; i < markersArray.length; i++ ) {
+                markersArray[i].setMap(null);
+            }
+              markersArray.length = 0;
+        }
+
     </script>
 
 </body>
