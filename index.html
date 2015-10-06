@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ISS Tracker</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+</head>
+<style>
+
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+        display: none !important;
+    }
+
+    html, body { height: 100%; margin: 0; padding: 0; }
+    #map { height: 415px; }
+
+</style>
+<body ng-app="app">
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 class="text-center">ISS Tracker</h1>
+                <div ng-controller="mainController" class="ng-cloak">
+                    <h4><strong>Latitude:</strong> <br><br> {{data.latitude}}</h4>
+                    <hr>
+                    <h4><strong>Longitude:</strong> <br><br> {{data.longitude}}</h4>
+                    <hr>
+                    <h4><strong>Altitude:</strong> <br><br> {{data.altitude}} km</h4>
+                    <hr>
+                    <h4><strong>Velocity:</strong> <br><br> {{data.velocity}} km/s</h4>
+                    <hr>
+                    <h4><strong>Solar Latitude:</strong> <br><br> {{data.solar_lat}}</h4>
+                    <hr>
+                    <h4><strong>Solar Longitude:</strong> <br><br> {{data.solar_lon}}</h4>
+                    <hr>
+                </div>
+                <div id="map"></div>
+                <br>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0-beta.1/angular.js"></script>
+    <script async defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCCi20nnFOy5x08DFvZOL7WO7rGQPAlqko&callback=initMap">
+    </script>
+    <script>
+
+    var app = angular.module('app', []);
+    
+    app.controller('mainController', function($scope, $http) {
+        $http.get("https://api.wheretheiss.at/v1/satellites/25544")
+            .success(function(res) {
+                $scope.data = res
+                initMap();
+            });
+
+        setInterval(function() { $http.get("https://api.wheretheiss.at/v1/satellites/25544")
+            .success(function(res) {
+                $scope.data = res
+            });
+        }, 1000);
+
+        setInterval(function() {
+            initMap();
+        }, 10000);
+    });
+
+    function initMap() {
+        var $element = $('div[ng-controller="mainController"]');
+        var scope = angular.element($element).scope();
+        var latLang = {lat: scope.data.latitude, lng: scope.data.longitude};
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: latLang,
+            scrollwheel: false,
+            zoom: 2
+        });
+
+        var marker = new google.maps.Marker({
+            position: latLang,
+            map: map,
+            title: 'Internation Space Station'
+        });
+    }
+    </script>
+
+</body>
+</html>
