@@ -12,7 +12,7 @@
     }
 
     html, body { height: 100%; margin: 0; padding: 0; }
-    #map { height: 415px; }
+    #map { height: 450px; }
 
 </style>
 <body ng-app="app">
@@ -63,12 +63,11 @@
             setInterval(function() {
                 latLng = new google.maps.LatLng($scope.data.latitude, $scope.data.longitude);
                 map.panTo(latLng);
-            }, 10000);
+            }, 20000);
         });
 
         var map;
         var marker;
-        var markersArray = [];
 
         function initMap() {
             var $element = $('div[ng-controller="mainController"]');
@@ -82,23 +81,15 @@
             });
 
             var img = 'crosshair.png';
+            marker = new google.maps.Marker({
+                position: {lat: scope.data.latitude, lng: scope.data.longitude},
+                map: map,
+                title: 'ISS',
+                icon: img
+            });
             setInterval(function() {
-                marker = new google.maps.Marker({
-                    position: {lat: scope.data.latitude, lng: scope.data.longitude},
-                    map: map,
-                    title: 'ISS',
-                    icon: img
-                });
-                clearOverlays();
-                markersArray.push(marker);
+                marker.setPosition({lat: scope.data.latitude, lng: scope.data.longitude});
             }, 1000);
-        }
-
-        function clearOverlays() {
-            for (var i = 0; i < markersArray.length; i++ ) {
-                markersArray[i].setMap(null);
-            }
-              markersArray.length = 0;
         }
 
     </script>
