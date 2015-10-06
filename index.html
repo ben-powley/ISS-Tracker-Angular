@@ -58,7 +58,7 @@
                 .success(function(res) {
                     $scope.data = res
                 });
-            }, 5000);
+            }, 2000);
 
             setInterval(function() {
                 latLng = new google.maps.LatLng($scope.data.latitude, $scope.data.longitude);
@@ -77,10 +77,12 @@
             map = new google.maps.Map(document.getElementById('map'), {
                 center: latLang,
                 scrollwheel: false,
-                zoom: 2
+                zoom: 2,
+                streetViewControl: false,
+                mapTypeId: google.maps.MapTypeId.SATELLITE
             });
 
-            var img = 'crosshair.png';
+            var img = { url: 'crosshair.png', anchor: new google.maps.Point(32, 27)};
             marker = new google.maps.Marker({
                 position: {lat: scope.data.latitude, lng: scope.data.longitude},
                 map: map,
@@ -89,7 +91,7 @@
             });
             setInterval(function() {
                 marker.setPosition({lat: scope.data.latitude, lng: scope.data.longitude});
-            }, 5000);
+            }, 6000);
         }
 
     </script>
