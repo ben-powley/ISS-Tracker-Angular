@@ -78,8 +78,7 @@
                 center: latLang,
                 scrollwheel: false,
                 zoom: 2,
-                streetViewControl: false,
-                mapTypeId: google.maps.MapTypeId.SATELLITE
+                streetViewControl: false
             });
 
             var img = { url: 'crosshair.png', anchor: new google.maps.Point(32, 27)};
@@ -89,6 +88,7 @@
                 title: 'ISS',
                 icon: img
             });
+            
             setInterval(function() {
                 marker.setPosition({lat: scope.data.latitude, lng: scope.data.longitude});
             }, 6000);
