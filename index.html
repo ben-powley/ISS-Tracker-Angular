@@ -51,12 +51,16 @@
             $http.get("https://api.wheretheiss.at/v1/satellites/25544")
                 .success(function(res) {
                     $scope.data = res
+                    $scope.data.altitude = Math.round($scope.data.altitude)
+                    $scope.data.velocity = Math.round($scope.data.velocity)
                     initMap();
                 });
 
             setInterval(function() { $http.get("https://api.wheretheiss.at/v1/satellites/25544")
                 .success(function(res) {
                     $scope.data = res
+                    $scope.data.altitude = Math.round($scope.data.altitude)
+                    $scope.data.velocity = Math.round($scope.data.velocity)
                 });
             }, 2000);
 
