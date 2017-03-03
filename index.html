@@ -12,7 +12,7 @@
     }
 
     html, body { height: 100%; margin: 0; padding: 0; }
-    #map { height: 450px; }
+    #map { height: 650px; }
 
 </style>
 <body ng-app="app">
@@ -21,16 +21,21 @@
         <div class="row">
             <div class="col-sm-12">
                 <h3 class="text-center">ISS Tracker</h3>
-                <div ng-controller="mainController" class="ng-cloak">
-                    <h5><strong>Latitude:</strong> <br><br> {{data.latitude}}</h5>
-                    <hr>
-                    <h5><strong>Longitude:</strong> <br><br> {{data.longitude}}</h5>
-                    <hr>
-                    <h5><strong>Altitude:</strong> <br><br> {{data.altitude}} km</h5>
-                    <hr>
-                    <h5><strong>Velocity:</strong> <br><br> {{data.velocity}} km/s</h5>
-                    <hr>
+                <div ng-controller="mainController" class="ng-cloak row text-center">
+                    <div class="col-md-3">
+                        <h5><strong>Latitude:</strong> <br><br> {{data.latitude}}</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5><strong>Longitude:</strong> <br><br> {{data.longitude}}</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5><strong>Altitude:</strong> <br><br> {{data.altitude}} km</h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5><strong>Velocity:</strong> <br><br> {{data.velocity}} km/s</h5>
+                    </div>
                 </div>
+                <hr>
                 <div id="map"></div>
                 <br>
             </div>
@@ -81,8 +86,9 @@
             map = new google.maps.Map(document.getElementById('map'), {
                 center: latLang,
                 scrollwheel: false,
-                zoom: 2,
-                streetViewControl: false
+                zoom: 3,
+                streetViewControl: false,
+                disableDefaultUI: true
             });
 
             var img = { url: 'crosshair.png', anchor: new google.maps.Point(32, 27)};
